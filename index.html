@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktywny Przewodnik po Higienie Szpitalnej</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Jasnoszary/kamienny */
+        }
+        header {
+            background-color: #ffffff;
+        }
+        .nav-link {
+            @apply px-4 py-2 text-gray-700 hover:text-teal-600 rounded-md text-sm font-medium transition-colors duration-200;
+        }
+        .nav-link-mobile {
+            @apply block px-3 py-2 text-base font-medium text-gray-700 hover:bg-teal-50 hover:text-teal-700 rounded-md;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        h1, h2, h3 {
+            color: #0d5f60;
+        }
+        .content-card {
+            @apply bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl;
+        }
+        .icon-check {
+            color: #10B981;
+            font-weight: bold;
+        }
+        .icon-cross {
+            color: #EF4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <header class="sticky top-0 z-50 shadow-md w-full">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-2xl font-bold text-teal-700">Przewodnik Higieny</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#wprowadzenie" class="nav-link">Wprowadzenie</a>
+                        <a href="#odziez" class="nav-link">Odzież (Scrubs)</a>
+                        <a href="#obuwie" class="nav-link">Obuwie</a>
+                        <a href="#sprzet" class="nav-link">Sprzęt Osobisty</a>
+                        <a href="#wnioski" class="nav-link">Wnioski</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-teal-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-teal-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Otwórz menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#wprowadzenie" class="nav-link-mobile">Wprowadzenie</a>
+                <a href="#odziez" class="nav-link-mobile">Odzież (Scrubs)</a>
+                <a href="#obuwie" class="nav-link-mobile">Obuwie</a>
+                <a href="#sprzet" class="nav-link-mobile">Sprzęt Osobisty</a>
+                <a href="#wnioski" class="nav-link-mobile">Wnioski</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 p-4 sm:p-6 lg:p-8 space-y-12">
+
+        <section id="wprowadzenie" class="text-center">
+            <h1 class="text-4xl font-bold mb-4">Higiena w Placówkach Medycznych</h1>
+            <p class="text-lg max-w-3xl mx-auto text-gray-700">
+                Odzież medyczna, obuwie i sprzęt osobisty są nieodłącznym elementem pracy personelu medycznego, ale stanowią również krytyczny wektor przenoszenia patogenów. Zrozumienie skali zagrożenia i wdrożenie odpowiednich procedur dekontaminacji jest kluczowe dla bezpieczeństwa pacjentów i personelu. Ten przewodnik analizuje ryzyko i przedstawia oparte na dowodach standardy postępowania.
+            </p>
+        </section>
+
+        <section id="odziez" class="space-y-8">
+            <h2 class="text-3xl font-bold border-b-2 border-teal-200 pb-2">Odzież Medyczna (Scrubs)</h2>
+            
+            <div class="content-card">
+                <h3 class="text-2xl font-semibold mb-3">Skala Zagrożenia: Cichy Przenosiciel</h3>
+                <p class="text-gray-700 mb-4">
+                    Odzież personelu medycznego jest stale narażona na kontaminację. Badania wykazują, że znaczący odsetek uniformów jest skażony groźnymi patogenami, w tym szczepami wielolekoopornymi (MDRO).
+                </p>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>Do <strong>60%</strong> uniformów personelu szpitalnego może być skażonych patogenami takimi jak <strong>MRSA</strong> (Gronkowiec złocisty oporny na metycylinę).</li>
+                    <li>Inne często izolowane drobnoustroje to <strong>VRE</strong> (Enterokoki oporne na wankomycynę) oraz <strong>Acinetobacter baumannii</strong>.</li>
+                    <li>Patogeny mogą przetrwać na tkaninach bawełnianych i poliestrowych od kilku dni do nawet <strong>kilku miesięcy</strong>.</li>
+                    <li>Skażenie często koncentruje się w miejscach najczęstszego kontaktu: na mankietach, w okolicach brzucha i na kieszeniach.</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h3 class="text-2xl font-semibold mb-4">Metody Prania: Jak Skutecznie Usunąć Zagrożenie?</h3>
+                <p class="text-gray-700 mb-6">
+                    Skuteczność dekontaminacji zależy od wielu czynników, przede wszystkim od temperatury prania, użytych detergentów i procesu suszenia. Poniższe wykresy ilustrują kluczowe zależności.
+                </p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-stone-50 p-4 rounded-lg shadow-inner">
+                        <h4 class="text-lg font-semibold text-center mb-2 text-teal-800">Wpływ Temperatury na Redukcję Bakterii</h4>
+                        <div class="chart-container">
+                            <canvas id="tempChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded-lg shadow-inner">
+                        <h4 class="text-lg font-semibold text-center mb-2 text-teal-800">Wpływ Suszenia na Przeżywalność Bakterii</h4>
+                        <div class="chart-container">
+                            <canvas id="dryingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 bg-stone-50 p-4 rounded-lg shadow-inner">
+                    <h4 class="text-lg font-semibold text-center mb-2 text-teal-800">Skuteczność: Pranie Domowe vs. Przemysłowe</h4>
+                    <div class="chart-container max-w-xl">
+                        <canvas id="laundryTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3 class="text-2xl font-semibold mb-4">Dobre Praktyki i Regulacje</h3>
+                <p class="text-gray-700 mb-4">
+                    Wytyczne organizacji takich jak CDC (Centers for Disease Control and Prevention) i NHS (National Health Service) oraz polskie przepisy (np. Rozporządzenie Ministra Zdrowia) podkreślają konieczność profesjonalnego zarządzania bielizną szpitalną.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-2 text-green-600">Zalecenia (Rób)</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><span>Pierz odzież roboczą codziennie lub po każdym widocznym zabrudzeniu.</span></li>
+                            <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><span>Jeśli pierzesz w domu, używaj cyklu o temp. co najmniej <strong>60°C</strong> z detergentem.</span></li>
+                            <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><span>Susz odzież w suszarce bębnowej w wysokiej temperaturze lub prasuj gorącym żelazkiem.</span></li>
+                            <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><span>Transportuj brudną odzież w zamkniętym, jednorazowym worku.</span></li>
+                            <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><span>Idealnie, korzystaj z usług certyfikowanej pralni przemysłowej oferowanej przez pracodawcę.</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold mb-2 text-red-600">Czego Unikać (Nie rób)</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-start"><span class="icon-cross mr-2 mt-1">✘</span><span>Nie noś odzieży roboczej (scrubs) poza terenem szpitala, np. w drodze do domu czy na zakupach.</span></li>
+                            <li class="flex items-start"><span class="icon-cross mr-2 mt-1">✘</span><span>Nie pierz odzieży roboczej razem z odzieżą domową.</span></li>
+                            <li class="flex items-start"><span class="icon-cross mr-2 mt-1">✘</span><span>Nie używaj krótkich cykli prania w niskich temperaturach (np. 30-40°C) bez środków dezynfekcyjnych.</span></li>
+                            <li class="flex items-start"><span class="icon-cross mr-2 mt-1">✘</span><span>Nie zostawiaj brudnej odzieży w otwartych pojemnikach w domu.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="obuwie" class="space-y-8">
+            <h2 class="text-3xl font-bold border-b-2 border-teal-200 pb-2">Obuwie Szpitalne</h2>
+            
+            <div class="content-card">
+                <h3 class="text-2xl font-semibold mb-3">Zasady Użytkowania Obuwia</h3>
+                <p class="text-gray-700 mb-4">
+                    Podłogi szpitalne są jednym z najbardziej skażonych rezerwuarów patogenów. Obuwie staje się bezpośrednim wektorem przenoszenia tych drobnoustrojów między strefami szpitalnymi.
+                </p>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>Obuwie szpitalne powinno być <strong>dedykowane wyłącznie</strong> do użytku na terenie placówki.</li>
+                    <li>Wymagane jest obuwie z <strong>zakrytymi palcami i piętą</strong>, aby chronić stopę przed urazami i bezpośrednim kontaktem z płynami ustrojowymi.</li>
+                    <li>Materiał wykonania musi być <strong>nieprzepuszczalny dla płynów</strong> i łatwy do czyszczenia oraz dezynfekcji (np. guma, tworzywa sztuczne).</li>
+                    <li>Należy regularnie czyścić i dezynfekować obuwie, zwłaszcza po widocznym zabrudzeniu lub opuszczeniu strefy wysokiego ryzyka (np. sala operacyjna, izolatka).</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="sprzet" class="space-y-8">
+            <h2 class="text-3xl font-bold border-b-2 border-teal-200 pb-2">Sprzęt Osobisty</h2>
+            <p class="text-lg text-gray-700 max-w-3xl">
+                Przedmioty codziennego użytku, takie jak stetoskopy czy smartfony, są często pomijane w procedurach higienicznych, mimo że badania potwierdzają ich wysoki poziom kontaminacji i rolę w transmisji patogenów.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="content-card">
+                    <h3 class="text-2xl font-semibold mb-3">Stetoskopy</h3>
+                    <p class="text-gray-700 mb-4">
+                        Membrana stetoskopu wchodzi w bezpośredni kontakt ze skórą pacjentów, przenosząc florę bakteryjną. Badania wykazują, że poziom kontaminacji stetoskopów jest często porównywalny do dłoni personelu.
+                    </p>
+                    <h4 class="text-xl font-semibold mb-2 text-teal-800">Zalecenia:</h4>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Dezynfekuj stetoskop <strong>po każdym badaniu pacjenta</strong>.</li>
+                        <li>Używaj chusteczek nasączonych <strong>70% alkoholem izopropylowym</strong> lub innym zatwierdzonym środkiem.</li>
+                        <li>Regularnie czyść całe urządzenie, łącznie z przewodami i oliwkami.</li>
+                    </ul>
+                </div>
+                <div class="content-card">
+                    <h3 class="text-2xl font-semibold mb-3">Telefony Komórkowe (Smartfony)</h3>
+                    <p class="text-gray-700 mb-4">
+                        Smartfony są określane mianem "trzeciej ręki" personelu. Są dotykane nieustannie, często po kontakcie z pacjentem lub skażonymi powierzchniami, a rzadko czyszczone z obawy o uszkodzenie elektroniki.
+                    </p>
+                    <h4 class="text-xl font-semibold mb-2 text-teal-800">Zalecenia:</h4>
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                        <li>Unikaj korzystania z prywatnego telefonu podczas bezpośredniej opieki nad pacjentem.</li>
+                        <li>Stosuj <strong>wodoodporne, łatwe do czyszczenia etui</strong>.</li>
+                        <li>Regularnie (co najmniej raz dziennie) dezynfekuj telefon chusteczkami do sprzętu elektronicznego lub na bazie 70% alkoholu (zgodnie z zaleceniami producenta).</li>
+                        <li><strong>Nigdy</strong> nie kładź telefonu na powierzchniach w strefie pacjenta (szafki, łóżka).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="wnioski" class="space-y-8">
+            <h2 class="text-3xl font-bold border-b-2 border-teal-200 pb-2">Kluczowe Wnioski: Twoja Checklista Higieny</h2>
+            
+            <div class="content-card bg-teal-50 border-l-4 border-teal-500">
+                <p class="text-gray-700 mb-4">
+                    Przestrzeganie zasad higieny odzieży i sprzętu nie jest opcją, lecz fundamentalnym obowiązkiem w celu przerwania łańcucha zakażeń.
+                </p>
+                <ul class="space-y-3">
+                    <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><strong>Odzież:</strong> Traktuj scrubs jako odzież skażoną. Pierz codziennie w temp. min. 60°C lub oddawaj do pralni szpitalnej. Nie noś poza szpitalem.</li>
+                    <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><strong>Obuwie:</strong> Używaj dedykowanego, zamkniętego i łatwego do mycia obuwia. Regularnie je dezynfekuj.</li>
+                    <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><strong>Stetoskop:</strong> Dezynfekuj po każdym pacjencie. Traktuj go jak przedłużenie swoich dłoni.</li>
+                    <li class="flex items-start"><span class="icon-check mr-2 mt-1">✔</span><strong>Smartfon:</strong> Czyść regularnie. Unikaj używania w strefie pacjenta. Pamiętaj o higienie rąk po każdym użyciu telefonu.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 py-6 bg-gray-200 text-center text-gray-600 text-sm">
+        <p>&copy; 2025 Interaktywny Przewodnik po Higienie Szpitalnej. Opracowano na podstawie analizy badań i wytycznych.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+            });
+
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+                });
+            });
+
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                const words = text.split(' ');
+                let line = '';
+                for (let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    let metrics = context.measureText(testLine);
+                    let testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                context.fillText(line, x, y);
+            }
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            color: '#374151'
+                        },
+                        grid: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#374151'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#ffffff',
+                        titleColor: '#0d5f60',
+                        bodyColor: '#374151',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.y}%`;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const tealColor = 'rgba(13, 148, 136, 0.7)';
+            const sandColor = 'rgba(214, 186, 153, 0.7)';
+            const tealBorder = 'rgba(13, 148, 136, 1)';
+            const sandBorder = 'rgba(214, 186, 153, 1)';
+
+            const tempCtx = document.getElementById('tempChart')?.getContext('2d');
+            if (tempCtx) {
+                new Chart(tempCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['40°C', '50°C', '60°C', '75°C'],
+                        datasets: [{
+                            label: 'Redukcja bakterii',
+                            data: [40, 65, 95, 100],
+                            backgroundColor: [
+                                'rgba(251, 146, 60, 0.7)',
+                                'rgba(249, 115, 22, 0.7)',
+                                'rgba(234, 88, 12, 0.7)',
+                                'rgba(13, 148, 136, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(251, 146, 60, 1)',
+                                'rgba(249, 115, 22, 1)',
+                                'rgba(234, 88, 12, 1)',
+                                'rgba(13, 148, 136, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { ...chartOptions,
+                        plugins: { ...chartOptions.plugins,
+                            tooltip: { ...chartOptions.plugins.tooltip,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += `${context.parsed.y}%`;
+                                        }
+                                        if (context.label === '60°C') {
+                                            return [label, '(Minimalna zalecana temp.)'];
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const dryingCtx = document.getElementById('dryingChart')?.getContext('2d');
+            if (dryingCtx) {
+                new Chart(dryingCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Suszenie na powietrzu', 'Suszenie w suszarce bębnowej'],
+                        datasets: [{
+                            label: 'Przeżywalność bakterii',
+                            data: [60, 5],
+                            backgroundColor: [sandColor, tealColor],
+                            borderColor: [sandBorder, tealBorder],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+
+            const laundryTypeCtx = document.getElementById('laundryTypeChart')?.getContext('2d');
+            if (laundryTypeCtx) {
+                new Chart(laundryTypeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Pranie domowe (standardowe)', 'Pranie przemysłowe (z walidacją)'],
+                        datasets: [{
+                            label: 'Odsetek odzieży wolnej od patogenów',
+                            data: [30, 99.9],
+                            backgroundColor: [sandColor, tealColor],
+                            borderColor: [sandBorder, tealBorder],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+        });
+    </script>
+</body>
+</html>
